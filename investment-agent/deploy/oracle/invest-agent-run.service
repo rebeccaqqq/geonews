@@ -1,0 +1,14 @@
+[Unit]
+Description=Investment agent: analyze portfolio and propose trades
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=invest
+WorkingDirectory=/opt/invest-agent
+EnvironmentFile=/opt/invest-agent/.env
+ExecStart=/opt/invest-agent/.venv/bin/python -m invest_agent run
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/invest-agent/state /var/lib/invest-agent

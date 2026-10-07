@@ -1,0 +1,11 @@
+[Unit]
+Description=Run the investment agent weekly, shortly after the US market opens
+
+[Timer]
+# Mondays 10:15 New York time (after the opening auction volatility settles).
+# For a daily drift check use: Mon..Fri 10:15 America/New_York
+OnCalendar=Mon 10:15 America/New_York
+Persistent=true
+
+[Install]
+WantedBy=timers.target

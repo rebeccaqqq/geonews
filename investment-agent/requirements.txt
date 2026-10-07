@@ -1,0 +1,24 @@
+# Core analytics
+numpy>=1.26
+pandas>=2.1
+scipy>=1.11
+yfinance>=0.2.40
+matplotlib>=3.8
+PyYAML>=6.0
+python-dotenv>=1.0
+
+# Brokerage (unofficial Robinhood API) + MFA
+robin_stocks>=3.1
+pyotp>=2.9
+
+# Notifications / approvals
+slack_sdk>=3.27
+slack_bolt>=1.18
+twilio>=9.0
+flask>=3.0
+
+# Optional AI review of each proposal
+anthropic>=0.70
+
+# Tests
+pytest>=8.0
