@@ -1,0 +1,18 @@
+[Unit]
+Description=Investment agent approval listener (Slack Socket Mode + Twilio SMS webhook)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=invest
+WorkingDirectory=/opt/invest-agent
+EnvironmentFile=/opt/invest-agent/.env
+ExecStart=/opt/invest-agent/.venv/bin/python -m invest_agent serve --host 127.0.0.1 --port 8080
+Restart=always
+RestartSec=10
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/invest-agent/state /var/lib/invest-agent
+
+[Install]
+WantedBy=multi-user.target

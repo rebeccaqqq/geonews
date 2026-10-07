@@ -1,0 +1,77 @@
+# Investment agent configuration. Copy to config.yaml and edit.
+
+# dry_run : compute + notify only, never touches the broker
+# approve : send proposal, execute only after you approve via Slack / SMS / CLI   (recommended)
+# auto    : execute immediately if every guardrail passes, then notify
+mode: approve
+
+broker: robinhood          # robinhood | paper
+benchmark: SPY
+
+# --- Risk target ---------------------------------------------------------
+# The optimizer is pulled toward target_beta and can drift up to max_beta
+# only when the extra expected return pays for it.
+target_beta: 1.10
+min_beta: 0.90
+max_beta: 1.50
+beta_penalty: 4.0          # higher = stays closer to target_beta
+risk_aversion: 2.0         # mean-variance lambda
+
+# --- Universe ------------------------------------------------------------
+# Broad, liquid building blocks. Higher-beta sleeves (QQQ, SMH, XLK) let the
+# optimizer lift beta above 1 without single-stock blowup risk.
+universe:
+  - SPY    # S&P 500
+  - VTI    # Total US market
+  - QQQ    # Nasdaq-100 (beta ~1.15)
+  - XLK    # Tech sector
+  - SMH    # Semiconductors (beta ~1.5)
+  - VUG    # US large growth
+  - MTUM   # Momentum factor
+  - QUAL   # Quality factor
+  - AVUV   # US small-cap value
+  - VEA    # Developed ex-US
+  - VWO    # Emerging markets
+  - XLV    # Health care (defensive)
+  - BRK-B  # Berkshire
+
+min_weight: 0.0
+max_weight: 0.30           # no single position above 30%
+min_positions: 4
+
+# --- Expected-return model --------------------------------------------------
+risk_free_rate: 0.04
+equity_risk_premium: 0.05  # long-run market excess return assumption
+momentum_tilt: 0.02        # +/- annual return per 1 z-score of 12-1 momentum
+lookback_years: 3          # covariance / beta window
+
+# --- Rebalancing -----------------------------------------------------------
+drift_threshold: 0.03      # rebalance a position only if off target by > 3 pts
+min_trade_usd: 25
+cash_buffer_pct: 0.01      # keep 1% cash
+max_turnover_pct: 0.25     # max 25% of portfolio traded per run
+max_order_usd: 5000        # hard cap per order
+max_daily_notional_usd: 15000
+proposal_ttl_minutes: 240  # approvals expire after 4 hours
+transaction_cost_bps: 5    # used in backtests
+
+# If false, holdings outside `universe` are left untouched (no forced sales,
+# no surprise capital gains); the agent manages the rest around them.
+sell_outside_universe: false
+# Positions the agent must never sell (e.g. low-basis lots, RSUs)
+do_not_sell: []
+# Tickers the agent must never buy
+blocklist: []
+
+# --- AI review (Claude) ----------------------------------------------------
+ai_review:
+  enabled: true
+  model: claude-opus-5-5
+  # If true, a "reject" verdict from the reviewer blocks auto-mode execution.
+  can_block_auto: true
+
+notify:
+  slack: true
+  sms: true
+
+state_dir: ./state

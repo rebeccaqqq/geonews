@@ -1,0 +1,11 @@
+# Only needed for SMS approvals (Twilio must reach /sms over HTTPS).
+# Point a DNS A record at the VM's public IP, open TCP 80/443 in the Oracle
+# VCN security list AND the VM firewall (iptables), then:
+#   sudo apt install caddy && sudo cp Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy
+agent.example.com {
+    @twilio path /sms
+    handle @twilio {
+        reverse_proxy 127.0.0.1:8080
+    }
+    respond 404
+}
