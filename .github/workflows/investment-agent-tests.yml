@@ -2,6 +2,7 @@ name: investment-agent tests
 
 on:
   push:
+    branches: [main]
     paths:
       - "investment-agent/**"
       - ".github/workflows/investment-agent-tests.yml"
